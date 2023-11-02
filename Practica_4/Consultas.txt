@@ -1,0 +1,5 @@
+Seleccionar el nombre de las personas que compiten en la competición Gilles Villeneuve
+
+Select p.nombre
+From persona p, compite c,campeonato ca
+Where p.codigo_persona = c.codigo_persona AND c.codigo_campeonato = ca.codigo_campeonato AND ca.nombre LIKE 'Gilles Villeneuve'; 

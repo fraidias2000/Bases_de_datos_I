@@ -1,0 +1,103 @@
+
+--CREAR BD Y CONECTARSE A ELLA
+create database BD_F1;
+\c BD_F1
+
+--ELIMINACIÓN TABLAS--
+DROP TABLE IF EXISTS persona;
+DROP TABLE IF EXISTS escuderia;
+DROP TABLE IF EXISTS mecanico;
+DROP TABLE IF EXISTS vehiculo;
+DROP TABLE IF EXISTS arregla;
+DROP TABLE IF EXISTS piloto;
+DROP TABLE IF EXISTS campeonato;
+DROP TABLE IF EXISTS compite;
+                   
+-- CREACION TABLAS --
+
+-- TABLA ESCUDERIA--
+CREATE TABLE escuderia(
+    codigo_escuderia INT NOT NULL,
+    nombre VARCHAR(200) NOT NULL,
+    sede VARCHAR(200)NOT NULL,
+    debut INT NOT NULL,
+    PRIMARY KEY (codigo_escuderia)
+);
+---------------------------------------------------------------
+-- TABLA PERSONA --
+CREATE TABLE persona(
+    codigo_persona INT,
+    nombre VARCHAR(200) NOT NULL,
+    apellidos VARCHAR(200)NOT NULL,
+    edad INT NOT NULL,
+    peso INT NOT NULL,
+    altura REAL NOT NULL,
+    nacionalidad VARCHAR(200)NOT NULL,
+    codigo_escuderia INT REFERENCES escuderia,
+    PRIMARY KEY (codigo_persona)
+);
+---------------------------------------------------------------
+-- TABLA VEHICULO--
+CREATE TABLE vehiculo(
+    codigo_vehiculo INT NOT NULL,
+    dimensiones VARCHAR(200) NOT NULL,
+    peso INT NOT NULL,
+    tipo_neumaticos VARCHAR(20) NOT NULL,
+    marca VARCHAR(200) NOT NULL,
+    motor VARCHAR(200) NOT NULL,
+    PRIMARY KEY (codigo_vehiculo)
+);
+---------------------------------------------------------------
+-- TABLA PILOTO--
+CREATE TABLE piloto(
+    codigo_persona INT NOT NULL REFERENCES persona,
+    palmares INT NOT NULL,
+    codigo_vehiculo INT NOT NULL REFERENCES vehiculo,
+    PRIMARY KEY (codigo_persona)
+);
+---------------------------------------------------------------
+-- TABLA MECANICO--
+CREATE TABLE mecanico(
+    codigo_persona INT NOT NULL REFERENCES persona,
+    especialidad VARCHAR(200) NOT NULL,
+    numero_telefono INT,
+    PRIMARY KEY(codigo_persona)
+);
+
+---------------------------------------------------------------
+-- TABLA ARREGLA--
+CREATE TABLE arregla(
+    codigo_persona INT NOT NULL REFERENCES mecanico,
+    codigo_vehiculo INT NOT NULL REFERENCES vehiculo,
+    PRIMARY KEY (codigo_persona, codigo_vehiculo)
+);
+
+---------------------------------------------------------------
+-- TABLA CAMPEONATO--
+CREATE TABLE campeonato(
+    codigo_campeonato INT NOT NULL,
+    nombre VARCHAR(200) NOT NULL,
+    tipo VARCHAR(200) NOT NULL,
+    temporada VARCHAR(50) NOT NULL,
+    record_actual REAL UNIQUE,
+    distancia_recorrido REAL NOT NULL,
+    PRIMARY KEY (codigo_campeonato)
+);
+---------------------------------------------------------------
+-- TABLA CIUDAD--
+CREATE TABLE ciudad(
+    codigo_ciudad INT NOT NULL,
+    pais VARCHAR(200) NOT NULL,
+    nombre VARCHAR(200) NOT NULL,
+    codigo_campeonato INT NOT NULL REFERENCES campeonato,
+    PRIMARY KEY (codigo_ciudad, codigo_campeonato)
+  
+);
+---------------------------------------------------------------
+-- TABLA COMPITE--
+CREATE TABLE compite(
+    codigo_campeonato INT NOT NULL REFERENCES campeonato,
+    codigo_persona INT NOT NULL REFERENCES persona,
+    PRIMARY KEY (codigo_campeonato, codigo_persona)
+);
+
